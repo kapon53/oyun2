@@ -281,7 +281,7 @@
             background: radial-gradient(circle, rgba(255,255,255,0.95) 0%, rgba(255,223,120,0.75) 35%, rgba(255,223,120,0) 70%);
             border-radius: 50%;
             pointer-events: none;
-            z-index: 160;
+            z-index: 260;
             animation: lightBurst 0.8s ease-out forwards;
         }
         @keyframes lightBurst {
@@ -294,7 +294,7 @@
             background: linear-gradient(to top, rgba(255,223,120,0.9), rgba(255,223,120,0));
             transform-origin: bottom center;
             pointer-events: none;
-            z-index: 159;
+            z-index: 259;
             animation: rayBurst 0.7s ease-out forwards;
         }
         @keyframes rayBurst {
@@ -316,7 +316,7 @@
         .f3 { bottom: -30px; left: -30px; transform: scaleY(-1); }
         .f4 { bottom: -30px; right: -30px; transform: scale(-1, -1); }
 
-        .confetti { position: fixed; top: 0; left: 0; z-index: 150; animation: confettiBurst ease-out forwards; }
+        .confetti { position: fixed; top: 0; left: 0; z-index: 250; animation: confettiBurst ease-out forwards; }
         @keyframes confettiBurst {
             0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
             65% { transform: translate(var(--dx), var(--dy)) rotate(calc(var(--spin) * 0.6)); opacity: 1; }
@@ -326,10 +326,8 @@
         .pink-flake {
             position: fixed;
             top: -10px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(255,182,213,0.95), rgba(255,182,213,0));
             pointer-events: none;
-            z-index: 140;
+            z-index: 240;
             animation: pinkFall linear forwards;
         }
         @keyframes pinkFall {
@@ -436,6 +434,7 @@
             <h1>Sürprizzzzz🥳</h1>
             <img src="25318.png" alt="Tom ve Jerry" style="max-width: 100%; border-radius: 14px; margin-bottom: 15px; box-shadow: 0 6px 18px rgba(0,0,0,0.15);">
             <p>Eylülümmm doğum günün kutlu olsunn sevdiklerinle nice mutlu senelereee🥳 İnşallah yeni yaşın önce sağlık mutluluk sonra istediğin hayal ettiğin şeyleri nasip etsin. Tw da tanıdığım çok nadir ve özel insanlardan birisin çok temiz saf bi kalbin sevgin var (beni sevmesende😒) seni çooook seviyorum bunu bil tm🫶🏻🎊🎉</p>
+            <p style="text-align: right; margin-top: 15px;"><strong>- kap10</strong></p>
             <button onclick="location.reload()" style="margin-top: 10px;">Tekrar Oyna</button>
         </div>
     </div>
@@ -445,7 +444,7 @@
         let currentLane = 1; 
         let prevLane = 1;
         let laneChangeTime = 0;
-        const lanes = [17, 50, 83]; 
+        const lanes = [20, 50, 80]; 
         
         let score = 0;
         const targetScore = 2500;
@@ -733,12 +732,15 @@
             }, 250); 
         }
 
-        let currentSpeed = 23; 
-        let currentSpawnRate = 360; 
+        // Değerler ~60fps (16.6667ms/kare) referans alınarak ayarlanmıştır.
+        // update() içinde kare süresine göre normalize edilir, böylece 90/120Hz
+        // ekranlarda (S25 gibi) oyun anormal hızlanmaz.
+        let currentSpeed = 25; 
+        let currentSpawnRate = 340; 
         
         function adjustDifficulty() {
-            currentSpeed = 23 + Math.min(15, Math.floor(score / 350) * 1.8);
-            let baseSpawnRate = Math.max(180, 400 - Math.floor(score / 350) * 25);
+            currentSpeed = 25 + Math.min(16, Math.floor(score / 320) * 1.9);
+            let baseSpawnRate = Math.max(160, 360 - Math.floor(score / 320) * 25);
             if (lowPerfMode) baseSpawnRate += 90;
             
             if (baseSpawnRate !== currentSpawnRate) {
@@ -751,8 +753,9 @@
         function update(ts) {
             if(!gameActive) return;
 
+            let dt = 16.6667; // ilk kare için 60fps eşdeğeri varsayılan
             if (lastFrameTs) {
-                const dt = ts - lastFrameTs;
+                dt = ts - lastFrameTs;
                 frameTimes.push(dt);
                 if (frameTimes.length > 50) frameTimes.shift();
                 if (!lowPerfMode && frameTimes.length >= 45) {
@@ -764,8 +767,12 @@
                 }
             }
             lastFrameTs = ts;
+
+            // Kare süresine göre normalize et (60fps referans). Sekme değişimi
+            // gibi büyük sıçramaları sınırlamak için üst limit koyuyoruz.
+            const speedMul = Math.min(dt, 50) / 16.6667;
             
-            score += 1.25; 
+            score += 1.25 * speedMul; 
             scoreDisplay.innerText = "Mesafe: " + Math.floor(score);
             adjustDifficulty();
 
@@ -777,7 +784,7 @@
 
             for(let i = activeItems.length - 1; i >= 0; i--) {
                 let item = activeItems[i];
-                item.z -= currentSpeed; 
+                item.z -= currentSpeed * speedMul; 
                 setItemDepth(item.el, item.z);
 
                 if(item.z < 380 && item.z > 90 && !item.hit) {
@@ -829,8 +836,8 @@
                 if (document.activeElement) document.activeElement.blur();
                 
                 gameActive = true;
-                currentSpeed = 23;
-                currentSpawnRate = 360;
+                currentSpeed = 25;
+                currentSpawnRate = 340;
                 maxItems = 6;
                 lowPerfMode = false;
                 frameTimes = [];
@@ -872,14 +879,13 @@
         }
 
         function createConfetti() {
-            const colors = ['#ff3b3b', '#ff9500', '#ffd400', '#4cd964', '#00c2ff', '#5856d6', '#ff2d95', '#ffffff'];
-            const vw = window.innerWidth;
-            const vh = window.innerHeight;
-            const originY = vh * 0.55;
+            const colors = ['#ff69b4', '#ff1493', '#ffb3c6', '#ffd6e8', '#ff8fab', '#ffffff', '#ff4f9a'];
+            const rect = document.getElementById('gift-container').getBoundingClientRect();
+            const cx = rect.left + rect.width / 2;
+            const cy = rect.top + rect.height / 2;
             const count = 100;
 
             for(let i = 0; i < count; i++) {
-                const fromLeft = i % 2 === 0;
                 let conf = document.createElement('div');
                 conf.className = 'confetti';
 
@@ -891,13 +897,14 @@
                 if (!isStrip && Math.random() > 0.5) conf.style.borderRadius = '50%';
                 conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
 
-                conf.style.left = (fromLeft ? -10 : vw + 10) + 'px';
-                conf.style.top = originY + 'px';
+                conf.style.left = cx + 'px';
+                conf.style.top = cy + 'px';
 
-                const dx = fromLeft
-                    ? (180 + Math.random() * (vw * 0.45))
-                    : -(180 + Math.random() * (vw * 0.45));
-                const dy = -(100 + Math.random() * 260);
+                // Hediye kutusunun merkezinden her yöne (özellikle yukarı doğru ağırlıklı) patlama
+                const angle = Math.random() * Math.PI * 2;
+                const dist = 90 + Math.random() * 220;
+                const dx = Math.cos(angle) * dist;
+                const dy = Math.sin(angle) * dist - 60;
                 conf.style.setProperty('--dx', dx + 'px');
                 conf.style.setProperty('--dy', dy + 'px');
                 conf.style.setProperty('--spin', (Math.random() * 720 - 360) + 'deg');
@@ -909,15 +916,17 @@
         }
 
         let pinkSnowInterval;
+        const fallingFlowers = ['🌸', '🌺', '🌷'];
         function startPinkSnow() {
             clearInterval(pinkSnowInterval);
             pinkSnowInterval = setInterval(() => {
                 const flake = document.createElement('div');
                 flake.className = 'pink-flake';
-                const size = 4 + Math.random() * 5;
-                flake.style.width = size + 'px';
-                flake.style.height = size + 'px';
+                flake.innerText = fallingFlowers[Math.floor(Math.random() * fallingFlowers.length)];
+                const size = 12 + Math.random() * 12;
+                flake.style.fontSize = size + 'px';
                 flake.style.left = Math.random() * 100 + 'vw';
+                flake.style.opacity = 0.7 + Math.random() * 0.3;
                 flake.style.setProperty('--drift', (Math.random() * 80 - 40) + 'px');
                 flake.style.animationDuration = (4.5 + Math.random() * 3) + 's';
                 document.body.appendChild(flake);
