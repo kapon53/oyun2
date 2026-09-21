@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eylül'ün Kaçış Serüveni</title>
+    <title>oyundeneme2</title>
     <link rel="preload" as="image" href="25275.png">
     <link rel="preload" as="image" href="25276.jpg">
     <style>
@@ -42,32 +42,6 @@
             z-index: 4;
         }
 
-        /* Dolaplar - artık zeminde, alt dolapların dış kenarında */
-        .wall-cabinet {
-            position: absolute;
-            bottom: 8%;
-            width: 130px;
-            height: 36%;
-            z-index: 4;
-            background:
-                repeating-linear-gradient(90deg, rgba(0,0,0,0.14) 0 3px, transparent 3px 80px),
-                repeating-linear-gradient(0deg, rgba(0,0,0,0.10) 0 2px, transparent 2px 60px),
-                linear-gradient(180deg, #f3ead9 0%, #e6d7ba 100%);
-            border-radius: 4px 4px 0 0;
-            box-shadow: 0 -6px 14px rgba(0,0,0,0.2), inset 0 0 18px rgba(0,0,0,0.12);
-        }
-        .wall-cabinet::before {
-            content: "";
-            position: absolute;
-            top: 20%; left: 14px;
-            width: 6px; height: 24px;
-            background: #7a5a34;
-            border-radius: 3px;
-            box-shadow: 90px 0 0 #7a5a34;
-        }
-        .wall-cabinet.left { left: -14px; }
-        .wall-cabinet.right { right: -14px; }
-
         /* Duvarda asılı mutfak eşyaları */
         .wall-item {
             position: absolute;
@@ -85,11 +59,11 @@
             position: absolute;
             bottom: 49%;
             font-size: 30px;
-            z-index: 2;
+            z-index: 3;
             filter: drop-shadow(1px 3px 3px rgba(0,0,0,0.25));
         }
-        .ci-left { left: 16%; }
-        .ci-right { right: 17%; font-size: 26px; }
+        .ci-left { left: 32%; }
+        .ci-right { right: 32%; font-size: 26px; }
 
         /* Mutfak penceresinden süzülen yumuşak ışık */
         .kitchen-light {
@@ -402,8 +376,6 @@
     
     <div id="game-container">
         <div class="kitchen-light"></div>
-        <div class="wall-cabinet left"></div>
-        <div class="wall-cabinet right"></div>
 
         <div class="wall-item wi-left-1">🍳</div>
         <div class="wall-item wi-left-2">🥄</div>
@@ -431,7 +403,7 @@
     </div>
 
     <div id="start-screen" class="screen">
-        <h1 style="color: #ff69b4;">Eylül'ün Kaçış Serüveni</h1>
+        <h1 style="color: #ff69b4;">Oyun Denemesi 2</h1>
         <p style="font-size: 20px; max-width: 400px; margin-bottom: 5px;">Tom peşinde! Yoldaki tuzaklara dikkat et, peynirleri toplayarak can kazanabilirsin!</p>
         <div style="max-width: 420px; background: rgba(255,255,255,0.12); border-radius: 16px; padding: 16px 20px; margin-top: 10px; text-align: left; font-size: 16px; line-height: 1.6;">
             <strong style="color: #ff69b4;">Nasıl Oynanır?</strong><br>
@@ -461,10 +433,9 @@
             <div class="flower f2">🌺</div>
             <div class="flower f3">🌷</div>
             <div class="flower f4">🌸</div>
-            <h1>İyi ki Doğdun Eylül!</h1>
+            <h1>Sürprizzzzz🥳</h1>
             <img src="25318.png" alt="Tom ve Jerry" style="max-width: 100%; border-radius: 14px; margin-bottom: 15px; box-shadow: 0 6px 18px rgba(0,0,0,0.15);">
-            <p>Buraya Eylül için en güzel doğum günü mesajını yazabilirsin. Umarım bu koşturmacanın sonunda yüzünü güldürebilmişimdir!</p>
-            <p style="text-align: right; margin-top: 30px;"><strong>- Arkadaşın</strong></p>
+            <p>Eylülümmm doğum günün kutlu olsunn sevdiklerinle nice mutlu senelereee🥳 İnşallah yeni yaşın önce sağlık mutluluk sonra istediğin hayal ettiğin şeyleri nasip etsin. Tw da tanıdığım çok nadir ve özel insanlardan birisin çok temiz saf bi kalbin sevgin var (beni sevmesende😒) seni çooook seviyorum bunu bil tm🫶🏻🎊🎉</p>
             <button onclick="location.reload()" style="margin-top: 10px;">Tekrar Oyna</button>
         </div>
     </div>
@@ -613,8 +584,6 @@
             livesDisplay.innerText = "Can: " + hearts;
         }
 
-        // Şerit değişimini tek yerden yönet - önceki şeridi ve değişim zamanını kaydeder
-        // (geçiş animasyonu bitmeden çarpışma algılamasında kısa bir tolerans sağlar)
         function changeLane(newLane) {
             if(!gameActive) return;
             if(newLane < 0 || newLane > 2 || newLane === currentLane) return;
@@ -764,13 +733,13 @@
             }, 250); 
         }
 
-        let currentSpeed = 19; 
-        let currentSpawnRate = 400; 
+        let currentSpeed = 23; 
+        let currentSpawnRate = 360; 
         
         function adjustDifficulty() {
-            currentSpeed = 19 + Math.min(15, Math.floor(score / 350) * 1.8);
+            currentSpeed = 23 + Math.min(15, Math.floor(score / 350) * 1.8);
             let baseSpawnRate = Math.max(180, 400 - Math.floor(score / 350) * 25);
-            if (lowPerfMode) baseSpawnRate += 90; // zayıf cihazda daha az sıklıkta eşya çıkar
+            if (lowPerfMode) baseSpawnRate += 90;
             
             if (baseSpawnRate !== currentSpawnRate) {
                 currentSpawnRate = baseSpawnRate;
@@ -782,14 +751,13 @@
         function update(ts) {
             if(!gameActive) return;
 
-            // Kare süresini ölç, sürekli düşük FPS varsa otomatik hafif moda geç
             if (lastFrameTs) {
                 const dt = ts - lastFrameTs;
                 frameTimes.push(dt);
-                if (frameTimes.length > 40) frameTimes.shift();
-                if (!lowPerfMode && frameTimes.length >= 30) {
+                if (frameTimes.length > 50) frameTimes.shift();
+                if (!lowPerfMode && frameTimes.length >= 45) {
                     const avg = frameTimes.reduce((a,b)=>a+b,0) / frameTimes.length;
-                    if (avg > 30) { // ortalama 30ms üzeri = ~33 FPS altı
+                    if (avg > 34) { // sürekli (yaklaşık 45 kare boyunca) ~29 FPS altına düşerse
                         lowPerfMode = true;
                         maxItems = 4;
                     }
@@ -805,7 +773,6 @@
                 spawnFinishLine();
             }
 
-            // Şerit değiştireli az önceyse (250ms içi), önceki şeride denk gelen çarpışmalar da sayılır
             const inLaneGrace = (performance.now() - laneChangeTime) < 250;
 
             for(let i = activeItems.length - 1; i >= 0; i--) {
@@ -847,7 +814,6 @@
         function startGame() {
             if (gameActive) return; 
             try {
-                // Safari/iOS: ses motorunu doğrudan bu tıklama anında aç (aksi halde sessiz kalabilir)
                 try {
                     const ctx = getAudioCtx();
                     if (ctx.state === 'suspended') ctx.resume();
@@ -863,8 +829,8 @@
                 if (document.activeElement) document.activeElement.blur();
                 
                 gameActive = true;
-                currentSpeed = 19;
-                currentSpawnRate = 400;
+                currentSpeed = 23;
+                currentSpawnRate = 360;
                 maxItems = 6;
                 lowPerfMode = false;
                 frameTimes = [];
