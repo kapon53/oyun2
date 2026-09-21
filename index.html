@@ -364,6 +364,23 @@
             touch-action: manipulation;
         }
         .ctrl-btn:active { background: rgba(255,255,255,0.6); transform: scale(0.92); }
+
+        /* Zayıf/yavaş cihazlarda otomatik devreye giren sade görünüm:
+           ağır gölgeler, gradyanlar ve dekor öğeleri kaldırılır, sadece oyun kalır */
+        body.low-perf .fridge,
+        body.low-perf .stove,
+        body.low-perf .wall-item,
+        body.low-perf .counter-item,
+        body.low-perf .kitchen-light {
+            display: none;
+        }
+        body.low-perf #game-container {
+            background: linear-gradient(to bottom, #fdf3e3 0%, #e8c68f 100%);
+        }
+        body.low-perf #road {
+            background: repeating-linear-gradient(90deg, #d64545 0 110px, #f7f2e6 110px 220px);
+            box-shadow: none;
+        }
     </style>
 </head>
 <body>
@@ -433,10 +450,9 @@
             <div class="flower f2">🌺</div>
             <div class="flower f3">🌷</div>
             <div class="flower f4">🌸</div>
-            <h1>İyi ki Doğdun Eylül!</h1>
+            <h1>Sürprizzzzz🥳</h1>
             <img src="25318.png" alt="Tom ve Jerry" style="max-width: 100%; border-radius: 14px; margin-bottom: 15px; box-shadow: 0 6px 18px rgba(0,0,0,0.15);">
-            <p>Eylülll doğum günün kutlu olsunnn sevdiklerinle nice mutlu senelere inşallah yeni yaşın sağlık mutluluk huzur ve istediğin şeyler getirir tw da tanıdığım nadir insanlardan birisin (sen sevmesende😒) seni çooook seviyorum bunu bil tm 🥳🎉🎊🫶🏻</p>
-            <p style="text-align: right; margin-top: 30px;"><strong>- Arkadaşın</strong></p>
+            <p>Eylülümmm doğum günün kutlu olsunn sevdiklerinle nice mutlu senelereee🥳 İnşallah yeni yaşın önce sağlık mutluluk sonra istediğin hayal ettiğin şeyleri nasip etsin. Tw da tanıdığım çok nadir ve özel insanlardan birisin çok temiz saf bi kalbin sevgin var (beni sevmesende😒) seni çooook seviyorum bunu bil tm🫶🏻🎊🎉</p>
             <button onclick="location.reload()" style="margin-top: 10px;">Tekrar Oyna</button>
         </div>
     </div>
@@ -756,11 +772,12 @@
                 const dt = ts - lastFrameTs;
                 frameTimes.push(dt);
                 if (frameTimes.length > 40) frameTimes.shift();
-                if (!lowPerfMode && frameTimes.length >= 30) {
+                if (!lowPerfMode && frameTimes.length >= 18) {
                     const avg = frameTimes.reduce((a,b)=>a+b,0) / frameTimes.length;
-                    if (avg > 30) {
+                    if (avg > 26) {
                         lowPerfMode = true;
                         maxItems = 4;
+                        document.body.classList.add('low-perf');
                     }
                 }
             }
@@ -834,6 +851,7 @@
                 currentSpawnRate = 400;
                 maxItems = 6;
                 lowPerfMode = false;
+                document.body.classList.remove('low-perf');
                 frameTimes = [];
                 lastFrameTs = 0;
                 consecutiveObstacles = 0;
